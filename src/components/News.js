@@ -31,19 +31,23 @@ export class News extends Component {
             page: 1,
             totalResults: 0
         }
-        document.title = `${this.capatalizeFirstLetter(this.props.category)} - News Master `
+        document.title = `${this.capatalizeFirstLetter(this.props.category)} - News Master `;
     }
 
-    async updateNews(pageNo) {
+    async updateNews() {
+        this.props.setProgress(10);
         const url = `https://newsapi.org/v2/top-headlines?country=${this.props.country}&category=${this.props.category}&apiKey=44c9e5033ad4453aafe12c25ffaf1aa9&page=${this.state.page}&pageSize=${this.props.pageSize}`;
         this.setState({ loading: true })
         let data = await fetch(url);
+        this.props.setProgress(30);
         let parseData = await data.json();
+        this.props.setProgress(70);
         this.setState({
             articles: parseData.articles,
             totalResults: parseData.totalResults,
             loading: false
         });
+        this.props.setProgress(100);
     }
 
     async componentDidMount() {
