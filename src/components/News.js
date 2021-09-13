@@ -9,7 +9,6 @@ const News = (props) => {
     const [loading, setLoading] = useState(false)
     const [page, setPage] = useState(1)
     const [totalResults, setTotalResults] = useState(0)
-    // document.title = `${capatalizeFirstLetter(props.category)} - News Master `;
 
     const capatalizeFirstLetter = (string) => {
         return string.charAt(0).toUpperCase() + string.slice(1);
@@ -30,12 +29,14 @@ const News = (props) => {
     }
 
     useEffect(() => {
+        document.title = `${capatalizeFirstLetter(props.category)} - News Master `;
         updateNews()
+        // eslint-disable-next-line 
     }, [])
 
     const fetchMoreData = async () => {
+        const url = `https://newsapi.org/v2/top-headlines?country=${props.country}&category=${props.category}&apiKey=${props.apiKey}&page=${page + 1}&pageSize=${props.pageSize}`;
         setPage(page + 1)
-        const url = `https://newsapi.org/v2/top-headlines?country=${props.country}&category=${props.category}&apiKey=${props.apiKey}&page=${page}&pageSize=${props.pageSize}`;
         let data = await fetch(url);
         let parseData = await data.json();
         setArticles(articles.concat(parseData.articles))
@@ -44,7 +45,7 @@ const News = (props) => {
 
     return (
         <div className="my-5">
-            <h1 className="text-center">News Master - Top {capatalizeFirstLetter(props.category)} Headlines</h1>
+            <h1 className="text-center" style={{ marginTop: '90px' }}>News Master - Top {capatalizeFirstLetter(props.category)} Headlines</h1>
             {loading && <Spinner />}
             <InfiniteScroll dataLength={articles.length} next={fetchMoreData} hasMore={articles.length !== totalResults} loader={<Spinner />}>
                 <div className="container">
